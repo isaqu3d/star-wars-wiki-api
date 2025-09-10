@@ -1,9 +1,11 @@
+import fastifyStatic from "@fastify/static";
 import fastify from "fastify";
 import {
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
+import path from "node:path";
 import { GetCharacters } from "./routes/characters/get-characters";
 
 const server = fastify({
@@ -36,7 +38,10 @@ server.setValidatorCompiler(validatorCompiler);
 //     routePrefix: "/docs",
 //   });
 // }
-
+server.register(fastifyStatic, {
+  root: path.join(__dirname, "../public"),
+  prefix: "/public/",
+});
 server.register(GetCharacters);
 
 export { server };
