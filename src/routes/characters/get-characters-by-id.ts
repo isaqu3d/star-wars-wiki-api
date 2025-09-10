@@ -12,7 +12,7 @@ export const GetCharactersByIdRoute: FastifyPluginAsyncZod = async (server) => {
         tags: ["Characters"],
         summary: "Get a character by ID",
         params: z.object({
-          id: z.string(),
+          id: z.coerce.number(),
         }),
         response: {
           200: z.object({
@@ -31,12 +31,14 @@ export const GetCharactersByIdRoute: FastifyPluginAsyncZod = async (server) => {
             }),
           }),
           400: z.object({ error: z.string() }).describe("Invalid request"),
-          404: z.null().describe("Character not found"),
+          404: z
+            .object({ message: z.string() })
+            .describe("Character not found"),
         },
       },
     },
     async (request, reply) => {
-      const characterId = Number(request.params.id);
+      const characterId = request.params.id;
 
       if (isNaN(characterId)) {
         return reply.status(400).send({ error: "Invalid character ID" });
@@ -48,7 +50,7 @@ export const GetCharactersByIdRoute: FastifyPluginAsyncZod = async (server) => {
         .where(eq(characters.id, characterId));
 
       if (characterResult.length === 0) {
-        return reply.status(404).send(null);
+        return reply.status(404).send({ message: "Character not found" });
       }
 
       const character = characterResult[0];
