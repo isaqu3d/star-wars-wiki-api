@@ -12,6 +12,7 @@ import path from "node:path";
 import { GetCharactersRoute } from "./routes/characters/get-characters";
 import { GetCharactersByIdRoute } from "./routes/characters/get-characters-by-id";
 import { GetPlanetsRoute } from "./routes/planets/get-planets";
+import { GetPlanetsByIdRoute } from "./routes/planets/get-planets-by-id";
 
 const server = fastify({
   logger: {
@@ -63,5 +64,6 @@ server.register(fastifyStatic, {
 server.register(GetCharactersRoute);
 server.register(GetCharactersByIdRoute);
 server.register(GetPlanetsRoute);
+server.register(GetPlanetsByIdRoute);
 
 export { server };
