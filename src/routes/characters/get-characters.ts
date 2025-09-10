@@ -33,6 +33,7 @@ export const GetCharacters: FastifyPluginAsyncZod = async (server) => {
                 birth_year: z.string().nullable(),
                 gender: z.string().nullable(),
                 homeworld_id: z.number().nullable(),
+                image_url: z.string(),
               })
             ),
             total: z.number(),
