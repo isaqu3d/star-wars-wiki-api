@@ -14,7 +14,7 @@ export const GetPlanetsRoute: FastifyPluginAsync = async (server) => {
           200: z.object({
             planets: z.array(
               z.object({
-                id: z.uuid(),
+                id: z.number(),
                 name: z.string(),
                 rotation_period: z.string(),
                 orbital_period: z.string(),
@@ -32,8 +32,7 @@ export const GetPlanetsRoute: FastifyPluginAsync = async (server) => {
     },
     async (request, reply) => {
       const result = await db.select().from(planets);
-
-      return reply.send({ planets: result });
+      return { planets: result };
     }
   );
 };
