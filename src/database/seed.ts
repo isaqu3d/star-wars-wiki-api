@@ -56,6 +56,7 @@ async function seed() {
         birth_year: "19BBY",
         gender: "male",
         homeworld_id: planetsInsert[0].id,
+        image_url: "/images/characters/luke.jpg",
       },
       {
         name: "Leia Organa",
@@ -67,6 +68,7 @@ async function seed() {
         birth_year: "19BBY",
         gender: "female",
         homeworld_id: planetsInsert[1].id,
+        image_url: "/images/characters/leia.jpg",
       },
     ])
     .returning();
