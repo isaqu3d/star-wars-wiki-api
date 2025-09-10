@@ -11,6 +11,9 @@ importers:
       '@fastify/static':
         specifier: ^8.2.0
         version: 8.2.0
+      '@fastify/swagger':
+        specifier: ^9.5.1
+        version: 9.5.1
       '@fastify/swagger-ui':
         specifier: ^5.2.3
         version: 5.2.3
