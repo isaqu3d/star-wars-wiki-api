@@ -14,6 +14,24 @@ export const GetPlanetsByIdRoute: FastifyPluginAsyncZod = async (server) => {
         params: z.object({
           id: z.coerce.number(),
         }),
+        response: {
+          200: z.object({
+            planet: z.object({
+              id: z.number(),
+              name: z.string(),
+              rotation_period: z.string().nullable(),
+              orbital_period: z.string().nullable(),
+              diameter: z.string().nullable(),
+              climate: z.string().nullable(),
+              gravity: z.string().nullable(),
+              terrain: z.string().nullable(),
+              surface_water: z.string().nullable(),
+              population: z.string().nullable(),
+            }),
+          }),
+          400: z.object({ error: z.string() }).describe("Invalid request"),
+          404: z.object({ message: z.string() }).describe("Planet not found"),
+        },
       },
     },
     async (request, reply) => {
