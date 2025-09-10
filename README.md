@@ -104,6 +104,7 @@ Defined in `src/database/schema.ts`:
 
 ## 💻 Development Workflow
 
+```mermaid
 sequenceDiagram
 participant C as Client
 participant S as Fastify Server
@@ -123,6 +124,7 @@ S-->>C: 200 {character}
 else not found
 S-->>C: 404
 end
+```
 
 ## 📝 Useful Scripts
 
