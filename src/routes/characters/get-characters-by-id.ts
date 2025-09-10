@@ -19,50 +19,18 @@ export const GetCharactersById: FastifyPluginAsyncZod = async (server) => {
             character: z.object({
               id: z.number(),
               name: z.string(),
-              height: z.string(),
-              mass: z.string(),
-              hair_color: z.string(),
-              skin_color: z.string(),
-              eye_color: z.string(),
-              birth_year: z.string(),
-              gender: z.string(),
-              homeworld: z
-                .object({
-                  id: z.number(),
-                  name: z.string(),
-                })
-                .nullable(),
-
-              vehicles: z.array(
-                z.object({
-                  id: z.number(),
-                  name: z.string(),
-                  model: z.string(),
-                })
-              ),
-
-              starships: z.array(
-                z.object({
-                  id: z.number(),
-                  name: z.string(),
-                  model: z.string(),
-                })
-              ),
-
-              films: z.array(
-                z.object({
-                  id: z.number(),
-                  title: z.string(),
-                  episode_id: z.number(),
-                })
-              ),
+              height: z.string().nullable(),
+              mass: z.string().nullable(),
+              hair_color: z.string().nullable(),
+              skin_color: z.string().nullable(),
+              eye_color: z.string().nullable(),
+              birth_year: z.string().nullable(),
+              gender: z.string().nullable(),
+              homeworld_id: z.number().nullable(),
+              image_url: z.string().nullable(),
             }),
           }),
-          400: z
-            .object({
-              error: z.string(),
-            })
-            .describe("Invalid request"),
+          400: z.object({ error: z.string() }).describe("Invalid request"),
           404: z.null().describe("Character not found"),
         },
       },
@@ -74,14 +42,18 @@ export const GetCharactersById: FastifyPluginAsyncZod = async (server) => {
         return reply.status(400).send({ error: "Invalid character ID" });
       }
 
-      const character = await db
+      const characterResult = await db
         .select()
         .from(characters)
         .where(eq(characters.id, characterId));
 
-      if (!character) {
+      if (characterResult.length === 0) {
         return reply.status(404).send(null);
       }
+
+      const character = characterResult[0];
+
+      return { character };
     }
   );
 };
