@@ -4,7 +4,7 @@ import z from "zod";
 import { db } from "../../database/client";
 import { characters } from "../../database/schema";
 
-export const GetCharactersById: FastifyPluginAsyncZod = async (server) => {
+export const GetCharactersByIdRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/characters/:id",
     {

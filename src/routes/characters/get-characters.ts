@@ -11,7 +11,7 @@ const querySchema = z.object({
   limit: z.coerce.number().optional().default(10),
 });
 
-export const GetCharacters: FastifyPluginAsyncZod = async (server) => {
+export const GetCharactersRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/characters",
     {
