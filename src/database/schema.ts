@@ -24,6 +24,7 @@ export const characters = pgTable("characters", {
   birth_year: text("birth_year"),
   gender: text("gender"),
   homeworld_id: integer("homeworld_id").references(() => planets.id),
+  image_url: text("image_url").notNull(),
 });
 
 export const vehicles = pgTable("vehicles", {
