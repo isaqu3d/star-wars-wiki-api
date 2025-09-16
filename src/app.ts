@@ -11,6 +11,7 @@ import {
 import path from "node:path";
 import { GetCharactersRoute } from "./routes/characters/get-characters";
 import { GetCharactersByIdRoute } from "./routes/characters/get-characters-by-id";
+import { GetFilmsRoute } from "./routes/films/get-films";
 import { GetPlanetsRoute } from "./routes/planets/get-planets";
 import { GetPlanetsByIdRoute } from "./routes/planets/get-planets-by-id";
 
@@ -65,5 +66,6 @@ server.register(GetCharactersRoute);
 server.register(GetCharactersByIdRoute);
 server.register(GetPlanetsRoute);
 server.register(GetPlanetsByIdRoute);
+server.register(GetFilmsRoute);
 
 export { server };
