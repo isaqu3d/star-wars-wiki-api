@@ -1,5 +1,6 @@
 import { and, asc, ilike } from "drizzle-orm";
-import { FastifyPluginAsync } from "fastify";
+
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import z from "zod";
 import { db } from "../../database/client";
 import { planets } from "../../database/schema";
@@ -14,7 +15,7 @@ const querySchema = z.object({
   limit: z.coerce.number().optional().default(10),
 });
 
-export const GetPlanetsRoute: FastifyPluginAsync = async (server) => {
+export const GetPlanetsRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/planets",
     {
@@ -28,16 +29,17 @@ export const GetPlanetsRoute: FastifyPluginAsync = async (server) => {
               z.object({
                 id: z.number(),
                 name: z.string(),
-                rotation_period: z.string(),
-                orbital_period: z.string(),
-                diameter: z.string(),
-                climate: z.string(),
-                gravity: z.string(),
-                terrain: z.string(),
-                surface_water: z.string(),
-                population: z.string(),
+                rotation_period: z.string().nullable(),
+                orbital_period: z.string().nullable(),
+                diameter: z.string().nullable(),
+                climate: z.string().nullable(),
+                gravity: z.string().nullable(),
+                terrain: z.string().nullable(),
+                surface_water: z.string().nullable(),
+                population: z.string().nullable(),
               })
             ),
+            total: z.number(),
           }),
         },
       },
