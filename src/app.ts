@@ -9,8 +9,8 @@ import {
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import path from "node:path";
-import { GetCharacterByIdRoute } from "./routes/characters/get-character-by-id";
-import { GetCharactersRoute } from "./routes/characters/get-characters";
+
+import { characterRoutes } from "./routes/characters/character.route";
 import { GetFilmsRoute } from "./routes/films/get-films";
 import { GetPlanetsRoute } from "./routes/planets/get-planets";
 import { GetPlanetsByIdRoute } from "./routes/planets/get-planets-by-id";
@@ -62,8 +62,9 @@ server.register(fastifyStatic, {
   root: path.join(__dirname, "../public"),
   prefix: "/public/",
 });
-server.register(GetCharactersRoute);
-server.register(GetCharacterByIdRoute);
+
+server.register(characterRoutes);
+
 server.register(GetPlanetsRoute);
 server.register(GetPlanetsByIdRoute);
 server.register(GetFilmsRoute);
