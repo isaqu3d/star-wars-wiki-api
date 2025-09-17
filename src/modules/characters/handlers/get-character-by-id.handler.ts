@@ -3,8 +3,8 @@ import z from "zod";
 import {
   characterIdParamSchema,
   characterResponseSchema,
-} from "../character.schemas";
-import { getCharacterById } from "../character.services";
+} from "../schemas/character.schemas";
+import { getCharacterById } from "../services/character.services";
 
 export const getCharacterByIdHandler: FastifyPluginAsyncZod = async (
   server

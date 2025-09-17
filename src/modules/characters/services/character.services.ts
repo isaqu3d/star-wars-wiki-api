@@ -1,12 +1,12 @@
 import { and, asc, eq, ilike } from "drizzle-orm";
 import z from "zod";
-import { db } from "../../database/client";
-import { characters } from "../../database/schema";
+import { db } from "../../../database/client";
+import { characters } from "../../../database/schema";
 import {
   characterIdParamSchema,
   characterQueryParamsSchema,
   createCharacterBodySchema,
-} from "./character.schemas";
+} from "../schemas/character.schemas";
 
 export async function createCharacter(
   data: z.infer<typeof createCharacterBodySchema>

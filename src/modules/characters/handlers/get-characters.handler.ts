@@ -2,8 +2,8 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import {
   characterQueryParamsSchema,
   charactersResponseSchema,
-} from "../character.schemas";
-import { getCharacters } from "../character.services";
+} from "../schemas/character.schemas";
+import { getCharacters } from "../services/character.services";
 
 export const getCharactersHandler: FastifyPluginAsyncZod = async (server) => {
   server.get(
