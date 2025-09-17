@@ -5,7 +5,7 @@ import { characters } from "../../database/schema";
 
 export const CreateCharacterRoute: FastifyPluginAsyncZod = async (server) => {
   server.post(
-    "/characters",
+    "/character",
     {
       schema: {
         tags: ["Characters"],
