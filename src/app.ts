@@ -10,7 +10,6 @@ import {
 } from "fastify-type-provider-zod";
 import path from "node:path";
 import { GetCharactersRoute } from "./routes/characters/get-characters";
-import { GetCharactersByIdRoute } from "./routes/characters/get-characters-by-id";
 import { GetFilmsRoute } from "./routes/films/get-films";
 import { GetPlanetsRoute } from "./routes/planets/get-planets";
 import { GetPlanetsByIdRoute } from "./routes/planets/get-planets-by-id";
