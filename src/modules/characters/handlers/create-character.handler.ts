@@ -7,7 +7,7 @@ import { createCharacter } from "../services/character.services";
 
 export const createCharacterHandler: FastifyPluginAsyncZod = async (server) => {
   server.post(
-    "/character",
+    "/characters",
     {
       schema: {
         tags: ["Characters"],
