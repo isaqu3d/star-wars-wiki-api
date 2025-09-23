@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Schema base sem id
+ * Base schema without id
  */
 export const characterBaseSchema = z.object({
   name: z.string(),
@@ -17,17 +17,17 @@ export const characterBaseSchema = z.object({
 });
 
 /**
- * Character completo (com id)
+ * Complete character (with id)
  */
 export const characterSchema = characterBaseSchema.extend({
   id: z.number(),
 });
 
 /**
- * Schemas para rotas
+ * Schemas for routes
  */
 export const createCharacterBodySchema = characterBaseSchema.extend({
-  image_url: z.string(), // obrigatório na criação
+  image_url: z.string(), // required on creation
 });
 
 export const characterIdParamSchema = z.object({
