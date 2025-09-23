@@ -22,7 +22,6 @@ build/
 *.db
 *.sqlite
 *.sqlite3
-drizzle/
 
 # Logs
 logs/
