@@ -1,19 +1,18 @@
 import fastifyStatic from "@fastify/static";
-import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastify from "fastify";
 import {
-  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import path from "node:path";
 
-import { characterRoutes } from "./routes/characters/character.route";
-import { GetFilmsRoute } from "./routes/films/get-films";
-import { GetPlanetsRoute } from "./routes/planets/get-planets";
-import { GetPlanetsByIdRoute } from "./routes/planets/get-planets-by-id";
+import { registerSwagger } from "./config/swagger";
+import { characterRoutes } from "./modules/characters/character.routes";
+import { filmRoutes } from "./modules/films/film.routes";
+import { planetRoutes } from "./modules/planets/planet.routes";
+import { starshipRoutes } from "./modules/starships/starship.routes";
+import { vehicleRoutes } from "./modules/vehicles/vehicle.routes";
 
 const server = fastify({
   logger: {
@@ -30,43 +29,20 @@ const server = fastify({
 server.setSerializerCompiler(serializerCompiler);
 server.setValidatorCompiler(validatorCompiler);
 
-// Swagger only in development
-if (process.env.NODE_ENV === "development") {
-  // Registers OpenAPI spec generator
-  server.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: "Star Wars API",
-        description:
-          "API for Star Wars characters, planets, vehicles, starships, and films",
-        version: "1.0.0",
-      },
-    },
-    transform: jsonSchemaTransform,
-  });
+// Register Swagger
+server.register(registerSwagger);
 
-  // Registers Swagger UI
-  server.register(fastifySwaggerUi, {
-    routePrefix: "/docs",
-    uiConfig: {
-      docExpansion: "list",
-      deepLinking: false,
-    },
-    staticCSP: true,
-    transformSpecification: (swaggerObject) => swaggerObject,
-  });
-
-  console.log("Swagger docs available at: http://localhost:3333/docs");
-}
+// Register static files
 server.register(fastifyStatic, {
   root: path.join(__dirname, "../public"),
   prefix: "/public/",
 });
 
+// Register routes
 server.register(characterRoutes);
-
-server.register(GetPlanetsRoute);
-server.register(GetPlanetsByIdRoute);
-server.register(GetFilmsRoute);
+server.register(planetRoutes);
+server.register(filmRoutes);
+server.register(starshipRoutes);
+server.register(vehicleRoutes);
 
 export { server };
