@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import fs from "node:fs";
 import path from "node:path";
-import { uploadCharacterImage } from "../../services/storage.service";
 import { db } from "../../config/database";
+import { uploadCharacterImage } from "../../services/storage.service";
 import { characters } from "../schema";
 
 async function seedCharacterImages() {
@@ -10,18 +10,16 @@ async function seedCharacterImages() {
   const files = fs.readdirSync(folderPath);
 
   for (const file of files) {
-    const nameWithoutExt = path.parse(file).name; // "luke", "leia", etc.
+    const nameWithoutExt = path.parse(file).name;
     const buffer = fs.readFileSync(path.join(folderPath, file));
-    const contentType = "image/jpeg"; // ou detecta via mime
+    const contentType = "image/jpeg";
 
-    // Faz upload para o R2
     const imageUrl = await uploadCharacterImage(
       buffer,
       `characters/${file}`,
       contentType
     );
 
-    // Atualiza o personagem existente pelo nome
     const result = await db
       .update(characters)
       .set({ image_url: imageUrl })
