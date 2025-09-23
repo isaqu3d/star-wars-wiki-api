@@ -8,13 +8,6 @@ import {
   createCharacterBodySchema,
 } from "./character.schema";
 
-export async function createCharacter(
-  data: z.infer<typeof createCharacterBodySchema>
-) {
-  const [newCharacter] = await db.insert(characters).values(data).returning();
-  return newCharacter;
-}
-
 export async function getCharacters(
   query: z.infer<typeof characterQueryParamsSchema>
 ) {
@@ -45,4 +38,11 @@ export async function getCharacterById(
     .from(characters)
     .where(eq(characters.id, characterId));
   return result[0] ?? null;
+}
+
+export async function createCharacter(
+  data: z.infer<typeof createCharacterBodySchema>
+) {
+  const [newCharacter] = await db.insert(characters).values(data).returning();
+  return newCharacter;
 }
