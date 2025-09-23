@@ -2,9 +2,10 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { FastifyInstance } from "fastify";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
+import { config } from "./environment";
 
 export const registerSwagger = async (server: FastifyInstance) => {
-  if (process.env.NODE_ENV === "development") {
+  if (config.isDevelopment) {
     // Registers OpenAPI spec generator
     await server.register(fastifySwagger, {
       openapi: {
