@@ -4,6 +4,7 @@ import {
   deleteCharacterHandler,
   getCharacterByIdHandler,
   getCharactersHandler,
+  updateCharacterHandler,
 } from "./character.handler";
 
 export const characterRoutes: FastifyPluginAsyncZod = async (server) => {
@@ -11,4 +12,5 @@ export const characterRoutes: FastifyPluginAsyncZod = async (server) => {
   server.register(getCharactersHandler);
   server.register(getCharacterByIdHandler);
   server.register(deleteCharacterHandler);
+  server.register(updateCharacterHandler);
 };

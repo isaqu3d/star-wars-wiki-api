@@ -57,3 +57,16 @@ export async function deleteCharacter(
 
   return result.length > 0;
 }
+
+export async function updateCharacter(
+  characterId: z.infer<typeof characterIdParamSchema>["id"],
+  data: z.infer<typeof createCharacterBodySchema>
+) {
+  const [updatedCharacter] = await db
+    .update(characters)
+    .set(data)
+    .where(eq(characters.id, characterId))
+    .returning();
+
+  return updatedCharacter;
+}

@@ -13,6 +13,7 @@ import {
   deleteCharacter,
   getCharacterById,
   getCharacters,
+  updateCharacter,
 } from "./character.service";
 
 export const getCharactersHandler: FastifyPluginAsyncZod = async (server) => {
@@ -108,6 +109,36 @@ export const deleteCharacterHandler: FastifyPluginAsyncZod = async (server) => {
       }
 
       return reply.status(204).send();
+    }
+  );
+};
+
+export const updateCharacterHandler: FastifyPluginAsyncZod = async (server) => {
+  server.put(
+    "/characters/:id",
+    {
+      schema: {
+        tags: ["Characters"],
+        summary: "Update a character by ID",
+        params: characterIdParamSchema,
+        body: createCharacterBodySchema,
+        response: {
+          200: characterResponseSchema,
+          400: z.object({ error: z.string() }).describe("Invalid request"),
+          404: z
+            .object({ message: z.string() })
+            .describe("Character not found"),
+        },
+      },
+    },
+    async (request, reply) => {
+      const character = await updateCharacter(request.params.id, request.body);
+
+      if (!character) {
+        return reply.status(404).send({ message: "Character not found" });
+      }
+
+      return { character };
     }
   );
 };
