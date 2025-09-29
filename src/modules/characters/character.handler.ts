@@ -4,14 +4,15 @@ import {
   characterIdParamSchema,
   characterQueryParamsSchema,
   characterResponseSchema,
-  charactersResponseSchema,
   characterSchema,
+  charactersResponseSchema,
   createCharacterBodySchema,
 } from "./character.schema";
 import {
-  getCharacters,
-  getCharacterById,
   createCharacter,
+  deleteCharacter,
+  getCharacterById,
+  getCharacters,
 } from "./character.service";
 
 export const getCharactersHandler: FastifyPluginAsyncZod = async (server) => {
@@ -79,6 +80,34 @@ export const createCharacterHandler: FastifyPluginAsyncZod = async (server) => {
       const character = await createCharacter(request.body);
 
       return reply.status(201).send(character);
+    }
+  );
+};
+
+export const deleteCharacterHandler: FastifyPluginAsyncZod = async (server) => {
+  server.delete(
+    "/characters/:id",
+    {
+      schema: {
+        tags: ["Characters"],
+        summary: "Delete a character by ID",
+        params: characterIdParamSchema,
+        response: {
+          204: z.null().describe("Character deleted"),
+          404: z
+            .object({ message: z.string() })
+            .describe("Character not found"),
+        },
+      },
+    },
+    async (request, reply) => {
+      const success = await deleteCharacter(request.params.id);
+
+      if (!success) {
+        return reply.status(404).send({ message: "Character not found" });
+      }
+
+      return reply.status(204).send();
     }
   );
 };
