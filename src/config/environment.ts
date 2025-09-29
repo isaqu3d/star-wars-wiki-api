@@ -1,18 +1,20 @@
-import { z } from "zod";
 import { config as dotenvConfig } from "dotenv";
+import { z } from "zod";
 
 // Load environment variables from .env file
 dotenvConfig();
 
 const envSchema = z.object({
   PORT: z.string().default("3333").transform(Number),
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
 
   // Database - Make optional for development
   DATABASE_URL: z.string().optional(),
 
   // AWS/R2 Configuration
-  R2_ENDPOINT: z.string().url().optional(),
+  R2_ENDPOINT: z.url().optional(),
   R2_ACCESS_KEY_ID: z.string().optional(),
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_BUCKET_NAME: z.string().optional(),
