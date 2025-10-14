@@ -1,12 +1,3 @@
-// 1. 📁 ESTRUTURA DE PASTAS (base)
-// 2. 📝 TYPES (contratos)
-// 3. ✅ SCHEMAS (validação)
-// 4. 🗄️ REPOSITORY (dados)
-// 5. 🔧 SERVICE (lógica)
-// 6. 🎮 CONTROLLER (interface)
-// 7. 🛣️ ROUTES (mapeamento)
-// 8. 🔗 REGISTRAR NO APP
-
 import z from "zod";
 import {
   createPlanetBodySchema,

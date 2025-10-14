@@ -19,7 +19,6 @@ export const planetSchema = z.object({
 /**
  * Route schemas
  */
-
 export const createPlanetBodySchema = planetSchema.omit({ id: true });
 
 export const planetIdParamSchema = z.object({
