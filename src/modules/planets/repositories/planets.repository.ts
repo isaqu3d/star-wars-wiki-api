@@ -1,6 +1,6 @@
 import { db } from "@/config/database";
 import { planets } from "@/database/schema";
-import { and, asc, ilike } from "drizzle-orm";
+import { and, asc, eq, ilike } from "drizzle-orm";
 import { Planet, PlanetFilters } from "../types/planets.types";
 
 export class PlanetRepository {
@@ -23,5 +23,11 @@ export class PlanetRepository {
       db.$count(planets, and(...conditions)),
     ]);
     return { data, total };
+  }
+
+  async findById(id: number): Promise<Planet | null> {
+    const [planet] = await db.select().from(planets).where(eq(planets.id, id));
+
+    return planet || null;
   }
 }
