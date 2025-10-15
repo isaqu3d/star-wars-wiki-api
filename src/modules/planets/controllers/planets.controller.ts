@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
+  createPlanetBodySchema,
   planetIdParamSchema,
   planetQueryParamsSchema,
 } from "../schemas/planets.schema";
@@ -34,6 +35,16 @@ export class PlanetController {
       return reply.send({ planet });
     } catch (error) {
       return reply.status(400).send({ error: "Invalid ID format" });
+    }
+  }
+
+  async createPlanet(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const data = createPlanetBodySchema.parse(request.body);
+      const planet = await this.planetService.createPlanet(data);
+      return reply.status(201).send({ planet });
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid request data" });
     }
   }
 }
