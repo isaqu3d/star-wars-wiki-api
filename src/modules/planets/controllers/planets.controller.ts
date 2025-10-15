@@ -1,5 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { planetQueryParamsSchema } from "../schemas/planets.schema";
+import {
+  planetIdParamSchema,
+  planetQueryParamsSchema,
+} from "../schemas/planets.schema";
 import { PlanetService } from "../services/planets.service";
 
 export class PlanetController {
@@ -16,6 +19,21 @@ export class PlanetController {
       return reply.send(result);
     } catch (error) {
       return reply.status(400).send({ error: "Invalid query parameters" });
+    }
+  }
+
+  async getPlanetById(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = planetIdParamSchema.parse(request.params);
+      const planet = await this.planetService.getPlanetById(id);
+
+      if (!planet) {
+        return reply.status(404).send({ message: "Planet not found" });
+      }
+
+      return reply.send({ planet });
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid ID format" });
     }
   }
 }
