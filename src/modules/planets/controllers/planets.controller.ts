@@ -47,4 +47,21 @@ export class PlanetController {
       return reply.status(400).send({ error: "Invalid request data" });
     }
   }
+
+  async updatePlanet(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = planetIdParamSchema.parse(request.params);
+      const data = createPlanetBodySchema.parse(request.body);
+
+      const planet = await this.planetService.updatePlanet(id, data);
+
+      if (!planet) {
+        return reply.status(404).send({ message: "Planet not found" });
+      }
+
+      return reply.send({ planet });
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid request data" });
+    }
+  }
 }
