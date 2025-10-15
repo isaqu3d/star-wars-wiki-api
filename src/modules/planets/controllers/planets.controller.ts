@@ -34,7 +34,7 @@ export class PlanetController {
 
       return reply.send({ planet });
     } catch (error) {
-      return reply.status(400).send({ error: "Invalid ID format" });
+      return reply.status(400).send({ error: "Invalid planet ID" });
     }
   }
 
@@ -44,7 +44,7 @@ export class PlanetController {
       const planet = await this.planetService.createPlanet(data);
       return reply.status(201).send({ planet });
     } catch (error) {
-      return reply.status(400).send({ error: "Invalid request data" });
+      return reply.status(400).send({ error: "Invalid planet data" });
     }
   }
 
@@ -62,6 +62,21 @@ export class PlanetController {
       return reply.send({ planet });
     } catch (error) {
       return reply.status(400).send({ error: "Invalid request data" });
+    }
+  }
+
+  async deletePlanet(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = planetIdParamSchema.parse(request.params);
+      const success = await this.planetService.deletePlanet(id);
+
+      if (!success) {
+        return reply.status(404).send({ message: "Planet not found" });
+      }
+
+      return reply.status(204).send();
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid Planet ID" });
     }
   }
 }
