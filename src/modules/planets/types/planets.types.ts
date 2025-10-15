@@ -8,7 +8,7 @@ import {
 
 export type Planet = z.infer<typeof planetSchema>;
 export type CreatePlanetData = z.infer<typeof createPlanetBodySchema>;
-export type planetQueryParams = z.infer<typeof planetQueryParamsSchema>;
+export type PlanetQueryParams = z.infer<typeof planetQueryParamsSchema>;
 export type PlanetIdParam = z.infer<typeof planetIdParamSchema>;
 
 export interface PlanetsResponse {
