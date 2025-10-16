@@ -2,7 +2,7 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { PlanetController } from "../controllers/planets.controller";
 import {
   planetQueryParamsSchema,
-  planetResponseSchema,
+  planetsResponseSchema,
 } from "../schemas/planets.schema";
 
 export const planetRoutes: FastifyPluginAsyncZod = async (server) => {
@@ -16,7 +16,7 @@ export const planetRoutes: FastifyPluginAsyncZod = async (server) => {
         summary: "Get all planets",
         querystring: planetQueryParamsSchema,
         response: {
-          200: planetResponseSchema,
+          200: planetsResponseSchema,
         },
       },
     },
