@@ -11,23 +11,25 @@ import { config } from "./config/environment";
 import { configureLogger } from "./config/logger";
 import { registerSecurity } from "./config/security";
 import { registerSwagger } from "./config/swagger";
-import { characterRoutes } from "./modules/characters/character.routes";
+import { characterRoutes } from "./modules/characters/routes/characters.routes";
 import { filmRoutes } from "./modules/films/film.routes";
-import { planetRoutes } from "./modules/planets/planet.routes";
+import { planetRoutes } from "./modules/planets/routes/planet.routes";
 import { starshipRoutes } from "./modules/starships/starship.routes";
 import { vehicleRoutes } from "./modules/vehicles/vehicle.routes";
 import { registerValidationMiddleware } from "./shared/middleware/validation";
 
 const server = fastify({
-  logger: config.isDevelopment ? {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  } : true,
+  logger: config.isDevelopment
+    ? {
+        transport: {
+          target: "pino-pretty",
+          options: {
+            translateTime: "HH:MM:ss Z",
+            ignore: "pid,hostname",
+          },
+        },
+      }
+    : true,
   trustProxy: true,
   bodyLimit: 1024 * 1024,
 }).withTypeProvider<ZodTypeProvider>();
@@ -56,11 +58,11 @@ server.register(fastifyStatic, {
   acceptRanges: false,
 });
 
-// Register API routes
-server.register(characterRoutes);
-server.register(planetRoutes);
-server.register(filmRoutes);
-server.register(starshipRoutes);
-server.register(vehicleRoutes);
+// Register API routes with prefixes
+server.register(characterRoutes, { prefix: "/characters" });
+server.register(filmRoutes, { prefix: "/films" });
+server.register(planetRoutes, { prefix: "/planets" });
+server.register(starshipRoutes, { prefix: "/starships" });
+server.register(vehicleRoutes, { prefix: "/vehicles" });
 
 export { server };
