@@ -1,6 +1,6 @@
-import { db } from "@/config/database";
-import { planets } from "@/database/schema";
 import { and, asc, eq, ilike } from "drizzle-orm";
+import { db } from "../../../config/database";
+import { planets } from "../../../database/schema";
 import { Planet, PlanetFilters } from "../types/planets.types";
 
 export class PlanetRepository {
