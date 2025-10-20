@@ -3,11 +3,11 @@ import z from "zod";
 export const filmsSchema = z.object({
   id: z.number(),
   title: z.string().min(1).max(255),
-  episode_id: z.number(),
+  episode_id: z.number().nullable(),
   opening_crawl: z.string().nullable(),
-  director: z.string().min(1).max(255),
-  producer: z.string().min(1).max(255),
-  release_date: z.string(),
+  director: z.string().nullable(),
+  producer: z.string().nullable(),
+  release_date: z.string().nullable(),
 });
 
 export const createFilmSchema = filmsSchema.omit({ id: true });
