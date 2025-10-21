@@ -1,7 +1,7 @@
 import { db } from "@/config/database";
 
 import { films } from "@/database/schema";
-import { and, asc, ilike } from "drizzle-orm";
+import { and, asc, eq, ilike } from "drizzle-orm";
 import { Film, FilmFilters } from "../types/films.types";
 
 export class FilmRepository {
@@ -25,5 +25,11 @@ export class FilmRepository {
     ]);
 
     return { data, total };
+  }
+
+  async findById(id: number): Promise<Film | null> {
+    const [film] = await db.select().from(films).where(eq(films.id, id));
+
+    return film;
   }
 }
