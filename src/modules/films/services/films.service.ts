@@ -1,5 +1,5 @@
 import { FilmRepository } from "../repositories/films.repository";
-import { FilmQueryParams, FilmsResponse } from "../types/films.types";
+import { Film, FilmQueryParams, FilmsResponse } from "../types/films.types";
 
 export class FilmService {
   private filmRepository: FilmRepository;
@@ -20,5 +20,9 @@ export class FilmService {
     const { data: films, total } = await this.filmRepository.findAll(filters);
 
     return { films, total };
+  }
+
+  async getFilmById(id: number): Promise<Film | null> {
+    return await this.filmRepository.findById(id);
   }
 }
