@@ -39,4 +39,10 @@ export class FilmRepository {
       .from(films)
       .where(ilike(films.title, `%${title}%`));
   }
+
+  async create(data: Omit<Film, "id">): Promise<Film> {
+    const [film] = await db.insert(films).values(data).returning();
+
+    return film;
+  }
 }
