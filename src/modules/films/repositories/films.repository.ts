@@ -45,4 +45,33 @@ export class FilmRepository {
 
     return film;
   }
+
+  async update(
+    id: number,
+    data: Partial<Omit<Film, "id">>
+  ): Promise<Film | null> {
+    const [film] = await db
+      .update(films)
+      .set(data)
+      .where(eq(films.id, id))
+      .returning();
+
+    return film || null;
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await db.delete(films).where(eq(films.id, id)).returning();
+
+    return result.length > 0;
+  }
+
+  async exists(id: number): Promise<boolean> {
+    const [film] = await db
+      .select()
+      .from(films)
+      .where(eq(films.id, id))
+      .limit(1);
+
+    return !!film;
+  }
 }
