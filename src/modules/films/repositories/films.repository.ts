@@ -32,4 +32,11 @@ export class FilmRepository {
 
     return film;
   }
+
+  async findByTitle(title: string): Promise<Film[]> {
+    return await db
+      .select()
+      .from(films)
+      .where(ilike(films.title, `%${title}%`));
+  }
 }
