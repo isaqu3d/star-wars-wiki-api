@@ -1,6 +1,6 @@
-import { db } from "@/config/database";
+import { db } from "../../../config/database";
 
-import { films } from "@/database/schema";
+import { films } from "../../../database/schema";
 import { and, asc, eq, ilike } from "drizzle-orm";
 import { Film, FilmFilters } from "../types/films.types";
 
