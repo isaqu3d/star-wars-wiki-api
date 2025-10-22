@@ -12,7 +12,8 @@ import { configureLogger } from "./config/logger";
 import { registerSecurity } from "./config/security";
 import { registerSwagger } from "./config/swagger";
 import { characterRoutes } from "./modules/characters/routes/characters.routes";
-import { filmRoutes } from "./modules/films/film.routes";
+
+import { filmRoutes } from "./modules/films/routes/films.routes";
 import { planetRoutes } from "./modules/planets/routes/planet.routes";
 import { starshipRoutes } from "./modules/starships/starship.routes";
 import { vehicleRoutes } from "./modules/vehicles/vehicle.routes";
@@ -60,8 +61,9 @@ server.register(fastifyStatic, {
 
 // Register API routes with prefixes
 server.register(characterRoutes, { prefix: "/characters" });
-server.register(filmRoutes, { prefix: "/films" });
 server.register(planetRoutes, { prefix: "/planets" });
+server.register(filmRoutes, { prefix: "/films" });
+
 server.register(starshipRoutes, { prefix: "/starships" });
 server.register(vehicleRoutes, { prefix: "/vehicles" });
 
