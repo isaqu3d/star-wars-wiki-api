@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
+  createFilmBodySchema,
   filmIdParamSchema,
   filmQueryParamsSchema,
 } from "../schemas/films.schema";
@@ -35,6 +36,52 @@ export class FilmController {
       return reply.send({ film });
     } catch (error) {
       return reply.status(400).send({ error: "Invalid film data" });
+    }
+  }
+
+  async createFilm(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const data = createFilmBodySchema.parse(request.body);
+
+      const film = await this.filmService.createFilm(data);
+
+      return reply.status(201).send({ film });
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid film data" });
+    }
+  }
+
+  async updateFilm(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = filmIdParamSchema.parse(request.params);
+
+      const data = createFilmBodySchema.parse(request.body);
+
+      const film = await this.filmService.updateFilm(id, data);
+
+      if (!film) {
+        return reply.status(404).send({ message: "Film not found" });
+      }
+
+      return reply.send({ film });
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid film data" });
+    }
+  }
+
+  async deleteFilm(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = filmIdParamSchema.parse(request.params);
+
+      const success = await this.filmService.deleteFilm(id);
+
+      if (!success) {
+        return reply.status(404).send({ message: "Film not found" });
+      }
+
+      return reply.status(204).send();
+    } catch (error) {
+      return reply.status(400).send({ error: "Invalid film ID" });
     }
   }
 }
