@@ -1,5 +1,10 @@
 import { FilmRepository } from "../repositories/films.repository";
-import { Film, FilmQueryParams, FilmsResponse } from "../types/films.types";
+import {
+  CreateFilmData,
+  Film,
+  FilmQueryParams,
+  FilmsResponse,
+} from "../types/films.types";
 
 export class FilmService {
   private filmRepository: FilmRepository;
@@ -24,5 +29,26 @@ export class FilmService {
 
   async getFilmById(id: number): Promise<Film | null> {
     return await this.filmRepository.findById(id);
+  }
+
+  async createFilm(data: CreateFilmData): Promise<Film> {
+    return await this.filmRepository.create(data);
+  }
+
+  async updateFilm(
+    id: number,
+    data: Partial<CreateFilmData>
+  ): Promise<Film | null> {
+    const existingFilm = await this.filmRepository.exists(id);
+
+    if (!existingFilm) {
+      return null;
+    }
+
+    return await this.filmRepository.update(id, data);
+  }
+
+  async deleteFilm(id: number): Promise<boolean> {
+    return await this.filmRepository.delete(id);
   }
 }
