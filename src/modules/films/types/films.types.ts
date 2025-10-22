@@ -1,13 +1,13 @@
 import z from "zod";
 import {
-  createFilmSchema,
+  createFilmBodySchema,
   filmIdParamSchema,
   filmQueryParamsSchema,
   filmsSchema,
 } from "../schemas/films.schema";
 
 export type Film = z.infer<typeof filmsSchema>;
-export type CreateFilmData = z.infer<typeof createFilmSchema>;
+export type CreateFilmData = z.infer<typeof createFilmBodySchema>;
 export type FilmQueryParams = z.infer<typeof filmQueryParamsSchema>;
 export type FilmIdParam = z.infer<typeof filmIdParamSchema>;
 

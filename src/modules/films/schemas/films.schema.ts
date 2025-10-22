@@ -10,9 +10,9 @@ export const filmsSchema = z.object({
   release_date: z.string().nullable(),
 });
 
-export const createFilmSchema = filmsSchema.omit({ id: true });
+export const createFilmBodySchema = filmsSchema.omit({ id: true });
 
-export const updateFilmSchema = createFilmSchema.partial();
+export const updateFilmSchema = createFilmBodySchema.partial();
 
 export const filmIdParamSchema = z.object({
   id: z.coerce.number(),
