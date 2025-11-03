@@ -19,6 +19,7 @@ import { starshipRoutes } from "./modules/starships/routes/starships.routes";
 import { vehicleRoutes } from "./modules/vehicles/routes/vehicles.routes";
 import { errorHandler, notFoundHandler } from "./shared/errors/errorHandler";
 import { registerValidationMiddleware } from "./shared/middleware/validation";
+import { readOnlyMiddleware } from "./shared/middlewares/readOnly.middleware";
 
 const server = fastify({
   logger: config.isDevelopment
@@ -50,6 +51,9 @@ configureLogger(server);
 
 // Register Swagger
 server.register(registerSwagger);
+
+// Register read-only middleware (blocks write operations in production)
+server.addHook("onRequest", readOnlyMiddleware);
 
 // Register static files with security considerations
 server.register(fastifyStatic, {
