@@ -5,6 +5,7 @@ import {
   planetQueryParamsSchema,
 } from "../schemas/planets.schema";
 import { PlanetService } from "../services/planets.service";
+import { NotFoundError } from "../../../shared/errors/AppError";
 
 export class PlanetController {
   private planetService: PlanetService;
@@ -14,69 +15,48 @@ export class PlanetController {
   }
 
   async getPlanets(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const query = planetQueryParamsSchema.parse(request.query);
-      const result = await this.planetService.getPlanets(query);
-      return reply.send(result);
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid query parameters" });
-    }
+    const query = planetQueryParamsSchema.parse(request.query);
+    const result = await this.planetService.getPlanets(query);
+    return reply.send(result);
   }
 
   async getPlanetById(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = planetIdParamSchema.parse(request.params);
-      const planet = await this.planetService.getPlanetById(id);
+    const { id } = planetIdParamSchema.parse(request.params);
+    const planet = await this.planetService.getPlanetById(id);
 
-      if (!planet) {
-        return reply.status(404).send({ message: "Planet not found" });
-      }
-
-      return reply.send({ planet });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid planet ID" });
+    if (!planet) {
+      throw new NotFoundError("Planet", id);
     }
+
+    return reply.send({ planet });
   }
 
   async createPlanet(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const data = createPlanetBodySchema.parse(request.body);
-      const planet = await this.planetService.createPlanet(data);
-      return reply.status(201).send({ planet });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid planet data" });
-    }
+    const data = createPlanetBodySchema.parse(request.body);
+    const planet = await this.planetService.createPlanet(data);
+    return reply.status(201).send({ planet });
   }
 
   async updatePlanet(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = planetIdParamSchema.parse(request.params);
-      const data = createPlanetBodySchema.parse(request.body);
+    const { id } = planetIdParamSchema.parse(request.params);
+    const data = createPlanetBodySchema.parse(request.body);
+    const planet = await this.planetService.updatePlanet(id, data);
 
-      const planet = await this.planetService.updatePlanet(id, data);
-
-      if (!planet) {
-        return reply.status(404).send({ message: "Planet not found" });
-      }
-
-      return reply.send({ planet });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid request data" });
+    if (!planet) {
+      throw new NotFoundError("Planet", id);
     }
+
+    return reply.send({ planet });
   }
 
   async deletePlanet(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = planetIdParamSchema.parse(request.params);
-      const success = await this.planetService.deletePlanet(id);
+    const { id } = planetIdParamSchema.parse(request.params);
+    const success = await this.planetService.deletePlanet(id);
 
-      if (!success) {
-        return reply.status(404).send({ message: "Planet not found" });
-      }
-
-      return reply.status(204).send();
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid Planet ID" });
+    if (!success) {
+      throw new NotFoundError("Planet", id);
     }
+
+    return reply.status(204).send();
   }
 }

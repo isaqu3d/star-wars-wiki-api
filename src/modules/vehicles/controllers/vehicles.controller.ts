@@ -5,6 +5,7 @@ import {
   createVehicleBodySchema,
   updateVehicleSchema,
 } from "../schemas/vehicles.schema";
+import { NotFoundError } from "../../../shared/errors/AppError";
 
 export class VehicleController {
   private service: VehicleService;
@@ -17,15 +18,10 @@ export class VehicleController {
    * Get all vehicles
    */
   async getVehicles(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const filters = vehicleQueryParamsSchema.parse(request.query);
-      const { data, total } = await this.service.getVehicles(filters);
+    const filters = vehicleQueryParamsSchema.parse(request.query);
+    const { data, total } = await this.service.getVehicles(filters);
 
-      return reply.send({ vehicles: data, total });
-    } catch (error) {
-      request.log.error(error);
-      return reply.status(500).send({ error: "Failed to fetch vehicles" });
-    }
+    return reply.send({ vehicles: data, total });
   }
 
   /**
@@ -35,34 +31,24 @@ export class VehicleController {
     request: FastifyRequest<{ Params: { id: number } }>,
     reply: FastifyReply
   ) {
-    try {
-      const { id } = request.params;
-      const vehicle = await this.service.getVehicleById(id);
+    const { id } = request.params;
+    const vehicle = await this.service.getVehicleById(id);
 
-      if (!vehicle) {
-        return reply.status(404).send({ error: "Vehicle not found" });
-      }
-
-      return reply.send({ vehicle });
-    } catch (error) {
-      request.log.error(error);
-      return reply.status(500).send({ error: "Failed to fetch vehicle" });
+    if (!vehicle) {
+      throw new NotFoundError("Vehicle", id);
     }
+
+    return reply.send({ vehicle });
   }
 
   /**
    * Create new vehicle
    */
   async createVehicle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const data = createVehicleBodySchema.parse(request.body);
-      const vehicle = await this.service.createVehicle(data);
+    const data = createVehicleBodySchema.parse(request.body);
+    const vehicle = await this.service.createVehicle(data);
 
-      return reply.status(201).send({ vehicle });
-    } catch (error) {
-      request.log.error(error);
-      return reply.status(500).send({ error: "Failed to create vehicle" });
-    }
+    return reply.status(201).send({ vehicle });
   }
 
   /**
@@ -72,20 +58,15 @@ export class VehicleController {
     request: FastifyRequest<{ Params: { id: number } }>,
     reply: FastifyReply
   ) {
-    try {
-      const { id } = request.params;
-      const data = updateVehicleSchema.parse(request.body);
-      const vehicle = await this.service.updateVehicle(id, data);
+    const { id } = request.params;
+    const data = updateVehicleSchema.parse(request.body);
+    const vehicle = await this.service.updateVehicle(id, data);
 
-      if (!vehicle) {
-        return reply.status(404).send({ error: "Vehicle not found" });
-      }
-
-      return reply.send({ vehicle });
-    } catch (error) {
-      request.log.error(error);
-      return reply.status(500).send({ error: "Failed to update vehicle" });
+    if (!vehicle) {
+      throw new NotFoundError("Vehicle", id);
     }
+
+    return reply.send({ vehicle });
   }
 
   /**
@@ -95,18 +76,13 @@ export class VehicleController {
     request: FastifyRequest<{ Params: { id: number } }>,
     reply: FastifyReply
   ) {
-    try {
-      const { id } = request.params;
-      const deleted = await this.service.deleteVehicle(id);
+    const { id } = request.params;
+    const deleted = await this.service.deleteVehicle(id);
 
-      if (!deleted) {
-        return reply.status(404).send({ error: "Vehicle not found" });
-      }
-
-      return reply.status(204).send();
-    } catch (error) {
-      request.log.error(error);
-      return reply.status(500).send({ error: "Failed to delete vehicle" });
+    if (!deleted) {
+      throw new NotFoundError("Vehicle", id);
     }
+
+    return reply.status(204).send();
   }
 }

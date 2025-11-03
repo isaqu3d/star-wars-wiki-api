@@ -5,6 +5,7 @@ import {
   filmQueryParamsSchema,
 } from "../schemas/films.schema";
 import { FilmService } from "../services/films.service";
+import { NotFoundError } from "../../../shared/errors/AppError";
 
 export class FilmController {
   private filmService: FilmService;
@@ -14,74 +15,50 @@ export class FilmController {
   }
 
   async getFilms(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const query = filmQueryParamsSchema.parse(request.query);
-      const result = await this.filmService.getFilms(query);
+    const query = filmQueryParamsSchema.parse(request.query);
+    const result = await this.filmService.getFilms(query);
 
-      return reply.send(result);
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid query parameters" });
-    }
+    return reply.send(result);
   }
 
   async getFilmById(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = filmIdParamSchema.parse(request.params);
-      const film = await this.filmService.getFilmById(id);
+    const { id } = filmIdParamSchema.parse(request.params);
+    const film = await this.filmService.getFilmById(id);
 
-      if (!film) {
-        return reply.status(404).send({ message: "Film not found" });
-      }
-
-      return reply.send({ film });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid film data" });
+    if (!film) {
+      throw new NotFoundError("Film", id);
     }
+
+    return reply.send({ film });
   }
 
   async createFilm(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const data = createFilmBodySchema.parse(request.body);
+    const data = createFilmBodySchema.parse(request.body);
+    const film = await this.filmService.createFilm(data);
 
-      const film = await this.filmService.createFilm(data);
-
-      return reply.status(201).send({ film });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid film data" });
-    }
+    return reply.status(201).send({ film });
   }
 
   async updateFilm(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = filmIdParamSchema.parse(request.params);
+    const { id } = filmIdParamSchema.parse(request.params);
+    const data = createFilmBodySchema.parse(request.body);
+    const film = await this.filmService.updateFilm(id, data);
 
-      const data = createFilmBodySchema.parse(request.body);
-
-      const film = await this.filmService.updateFilm(id, data);
-
-      if (!film) {
-        return reply.status(404).send({ message: "Film not found" });
-      }
-
-      return reply.send({ film });
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid film data" });
+    if (!film) {
+      throw new NotFoundError("Film", id);
     }
+
+    return reply.send({ film });
   }
 
   async deleteFilm(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { id } = filmIdParamSchema.parse(request.params);
+    const { id } = filmIdParamSchema.parse(request.params);
+    const success = await this.filmService.deleteFilm(id);
 
-      const success = await this.filmService.deleteFilm(id);
-
-      if (!success) {
-        return reply.status(404).send({ message: "Film not found" });
-      }
-
-      return reply.status(204).send();
-    } catch (error) {
-      return reply.status(400).send({ error: "Invalid film ID" });
+    if (!success) {
+      throw new NotFoundError("Film", id);
     }
+
+    return reply.status(204).send();
   }
 }
