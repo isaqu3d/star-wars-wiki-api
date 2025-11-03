@@ -19,7 +19,13 @@ export const vehicleSchema = z.object({
 });
 
 /**
- * Route schemas
+ * Create and update schemas
+ */
+export const createVehicleBodySchema = vehicleSchema.omit({ id: true });
+export const updateVehicleSchema = createVehicleBodySchema.partial();
+
+/**
+ * Route parameter schemas
  */
 export const vehicleIdParamSchema = z.object({
   id: z.coerce.number(),

@@ -15,8 +15,8 @@ import { characterRoutes } from "./modules/characters/routes/characters.routes";
 
 import { filmRoutes } from "./modules/films/routes/films.routes";
 import { planetRoutes } from "./modules/planets/routes/planet.routes";
-import { starshipRoutes } from "./modules/starships/starship.routes";
-import { vehicleRoutes } from "./modules/vehicles/vehicle.routes";
+import { starshipRoutes } from "./modules/starships/routes/starships.routes";
+import { vehicleRoutes } from "./modules/vehicles/routes/vehicles.routes";
 import { registerValidationMiddleware } from "./shared/middleware/validation";
 
 const server = fastify({

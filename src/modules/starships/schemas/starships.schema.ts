@@ -21,7 +21,13 @@ export const starshipSchema = z.object({
 });
 
 /**
- * Route schemas
+ * Create and update schemas
+ */
+export const createStarshipBodySchema = starshipSchema.omit({ id: true });
+export const updateStarshipSchema = createStarshipBodySchema.partial();
+
+/**
+ * Route parameter schemas
  */
 export const starshipIdParamSchema = z.object({
   id: z.coerce.number(),
