@@ -52,13 +52,18 @@ export const createFakeCharacters = (count: number = 5): Character[] => {
 
 /**
  * Create a character without ID (for creation tests)
+ * Note: image_url is always a string (not null) to match CreateCharacterData type
  */
 export const createFakeCharacterData = (
   overrides?: Partial<Omit<Character, "id">>
-): Omit<Character, "id"> => {
+): any => {
   const character = createFakeCharacter();
   const { id, ...characterData } = character;
-  return { ...characterData, ...overrides };
+  return {
+    ...characterData,
+    image_url: characterData.image_url || faker.image.avatar(),
+    ...overrides,
+  };
 };
 
 /**

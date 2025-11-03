@@ -113,6 +113,7 @@ describe("CharacterRepository", () => {
     it("should create a new character", async () => {
       const newCharacterData = createFakeCharacterData({
         name: "Test Character",
+        image_url: "https://example.com/character.jpg", // Garantir que não seja null
       });
       const createdCharacter = { id: 1, ...newCharacterData };
 
