@@ -114,8 +114,7 @@ test-results/
 playwright-report/
 playwright/.cache/
 
-# Docker
-.dockerignore
+
 
 # SSL certificates
 *.pem
