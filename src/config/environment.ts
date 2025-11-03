@@ -28,10 +28,6 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
   RATE_LIMIT_WINDOW: z.string().default("1 minute"),
 
-  // JWT (for future authentication)
-  JWT_SECRET: z.string().min(32).optional(),
-  JWT_EXPIRES_IN: z.string().default("7d"),
-
   // AWS/R2 Configuration (Optional)
   R2_ENDPOINT: z.string().startsWith("https://").optional(),
   R2_ACCESS_KEY_ID: z.string().optional(),
@@ -66,10 +62,6 @@ function validateEnvironment() {
       CORS_ORIGINS: process.env["CORS_ORIGINS"],
       RATE_LIMIT_MAX: process.env["RATE_LIMIT_MAX"],
       RATE_LIMIT_WINDOW: process.env["RATE_LIMIT_WINDOW"],
-
-      // JWT
-      JWT_SECRET: process.env["JWT_SECRET"],
-      JWT_EXPIRES_IN: process.env["JWT_EXPIRES_IN"],
 
       // AWS/R2
       R2_ENDPOINT: process.env["R2_ENDPOINT"],
@@ -134,12 +126,6 @@ export const config = {
     window: env.RATE_LIMIT_WINDOW,
   },
 
-  // JWT
-  jwt: {
-    secret: env.JWT_SECRET,
-    expiresIn: env.JWT_EXPIRES_IN,
-  },
-
   // Storage (R2/AWS)
   storage: {
     endpoint: env.R2_ENDPOINT,
@@ -164,10 +150,6 @@ if (config.isProduction) {
     productionRequirements.push("DATABASE_URL is required in production");
   }
 
-  if (!config.jwt.secret) {
-    productionRequirements.push("JWT_SECRET is required in production (minimum 32 characters)");
-  }
-
   if (productionRequirements.length > 0) {
     console.error("\n❌ Production environment check failed:");
     console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
@@ -185,10 +167,6 @@ if (config.isDevelopment) {
 
   if (!config.databaseUrl) {
     warnings.push("DATABASE_URL not set");
-  }
-
-  if (!config.jwt.secret) {
-    warnings.push("JWT_SECRET not set (authentication will not work)");
   }
 
   if (warnings.length > 0) {
