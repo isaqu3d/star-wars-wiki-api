@@ -17,6 +17,7 @@ import { filmRoutes } from "./modules/films/routes/films.routes";
 import { planetRoutes } from "./modules/planets/routes/planet.routes";
 import { starshipRoutes } from "./modules/starships/routes/starships.routes";
 import { vehicleRoutes } from "./modules/vehicles/routes/vehicles.routes";
+import { errorHandler, notFoundHandler } from "./shared/errors/errorHandler";
 import { registerValidationMiddleware } from "./shared/middleware/validation";
 
 const server = fastify({
@@ -63,8 +64,11 @@ server.register(fastifyStatic, {
 server.register(characterRoutes, { prefix: "/characters" });
 server.register(planetRoutes, { prefix: "/planets" });
 server.register(filmRoutes, { prefix: "/films" });
-
 server.register(starshipRoutes, { prefix: "/starships" });
 server.register(vehicleRoutes, { prefix: "/vehicles" });
+
+// Register error handlers (must be registered after all routes)
+server.setErrorHandler(errorHandler);
+server.setNotFoundHandler(notFoundHandler);
 
 export { server };
