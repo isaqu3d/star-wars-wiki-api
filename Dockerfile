@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+RUN corepack enable && pnpm install --frozen-lockfile --prod
 
 # Copy source code
 COPY . .
