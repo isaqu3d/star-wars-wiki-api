@@ -2,11 +2,11 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { config } from "../config/environment";
 
 export const r2 = new S3Client({
-  ...(config.r2.endpoint && { endpoint: config.r2.endpoint }),
-  region: config.r2.region,
+  ...(config.storage.endpoint && { endpoint: config.storage.endpoint }),
+  region: config.storage.region,
   credentials: {
-    accessKeyId: config.r2.accessKeyId!,
-    secretAccessKey: config.r2.secretAccessKey!,
+    accessKeyId: config.storage.accessKeyId!,
+    secretAccessKey: config.storage.secretAccessKey!,
   },
 });
 
@@ -31,7 +31,7 @@ export async function uploadCharacterImage(
   const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
 
   const command = new PutObjectCommand({
-    Bucket: config.r2.bucketName!,
+    Bucket: config.storage.bucketName!,
     Key: sanitizedFileName,
     Body: fileBuffer,
     ContentType: contentType,
@@ -43,5 +43,5 @@ export async function uploadCharacterImage(
 
   await r2.send(command);
 
-  return `${config.r2.endpoint}/${sanitizedFileName}`;
+  return `${config.storage.endpoint}/${sanitizedFileName}`;
 }
