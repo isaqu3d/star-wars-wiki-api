@@ -30,7 +30,7 @@ export class FilmRepository {
   async findById(id: number): Promise<Film | null> {
     const [film] = await db.select().from(films).where(eq(films.id, id));
 
-    return film;
+    return film || null;
   }
 
   async findByTitle(title: string): Promise<Film[]> {
