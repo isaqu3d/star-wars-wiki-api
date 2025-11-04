@@ -23,6 +23,9 @@ COPY drizzle.config.ts ./
 # Build TypeScript to JavaScript
 RUN pnpm build
 
+# Build seed script for production
+RUN pnpm build:seed
+
 # ==========================================
 # Production Stage
 # ==========================================

@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
+    "build:seed": "tsc src/database/seeds/seed.ts --outDir dist/seeds --esModuleInterop --resolveJsonModule --skipLibCheck",
     "start": "node dist/server.js",
     "deploy": "pnpm db:migrate && pnpm start",
+    "seed:prod": "node dist/seeds/seed.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
