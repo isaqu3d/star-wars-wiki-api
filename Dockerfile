@@ -47,6 +47,10 @@ COPY --from=builder --chown=starwars:nodejs /app/dist ./dist
 COPY --from=builder --chown=starwars:nodejs /app/drizzle ./drizzle
 COPY --chown=starwars:nodejs drizzle.config.ts ./
 
+# Copy startup script
+COPY --chown=starwars:nodejs start.sh ./
+RUN chmod +x start.sh
+
 # Change to non-root user
 USER starwars
 
@@ -57,5 +61,5 @@ EXPOSE 3333
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3333/films', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
 
-# Start application
-CMD ["node", "dist/server.js"]
+# Start application with migrations
+CMD ["./start.sh"]
