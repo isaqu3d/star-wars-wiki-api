@@ -14,7 +14,7 @@ npm-debug.log*
 !drizzle/
 
 # Build tools
-tsconfig.json
+# tsconfig.json is needed for build stage, so we don't exclude it
 .eslintrc.*
 .prettierrc.*
 
