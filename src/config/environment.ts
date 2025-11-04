@@ -36,9 +36,9 @@ const envSchema = z.object({
   R2_ACCOUNT_ID: z.string().optional(),
 
   // AWS Fallback
-  AWS_REGION: z.string().optional(),
-  AWS_ACCESS_KEY_ID: z.string().optional(),
-  AWS_SECRET_ACCESS_KEY: z.string().optional(),
+  // AWS_REGION: z.string().optional(),
+  // AWS_ACCESS_KEY_ID: z.string().optional(),
+  // AWS_SECRET_ACCESS_KEY: z.string().optional(),
 });
 
 function validateEnvironment() {
@@ -69,9 +69,9 @@ function validateEnvironment() {
       R2_SECRET_ACCESS_KEY: process.env["R2_SECRET_ACCESS_KEY"],
       R2_BUCKET_NAME: process.env["R2_BUCKET_NAME"],
       R2_ACCOUNT_ID: process.env["R2_ACCOUNT_ID"],
-      AWS_REGION: process.env["AWS_REGION"],
-      AWS_ACCESS_KEY_ID: process.env["AWS_ACCESS_KEY_ID"],
-      AWS_SECRET_ACCESS_KEY: process.env["AWS_SECRET_ACCESS_KEY"],
+      // AWS_REGION: process.env["AWS_REGION"],
+      // AWS_ACCESS_KEY_ID: process.env["AWS_ACCESS_KEY_ID"],
+      // AWS_SECRET_ACCESS_KEY: process.env["AWS_SECRET_ACCESS_KEY"],
     };
 
     return envSchema.parse(env);
@@ -129,11 +129,11 @@ export const config = {
   // Storage (R2/AWS)
   storage: {
     endpoint: env.R2_ENDPOINT,
-    accessKeyId: env.R2_ACCESS_KEY_ID || env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: env.R2_SECRET_ACCESS_KEY || env.AWS_SECRET_ACCESS_KEY,
-    bucketName: env.R2_BUCKET_NAME,
-    accountId: env.R2_ACCOUNT_ID,
-    region: env.AWS_REGION || "us-east-1",
+    accessKeyId: env.R2_ACCESS_KEY_ID || "",
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY || "",
+    bucketName: env.R2_BUCKET_NAME || "",
+    accountId: env.R2_ACCOUNT_ID || "",
+    region: "us-east-1",
   },
 
   // Feature flags
