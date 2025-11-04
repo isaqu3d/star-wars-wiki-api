@@ -1,66 +1,61 @@
-# ---- Build stage ----
+# ==========================================
+# Build Stage
+# ==========================================
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Enable Corepack so pnpm is available
-RUN corepack enable
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy only the files required to install dependencies
-# 🔄 Changed: use pnpm-lock.yaml instead of package-lock.json
+# Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies using pnpm instead of npm
-# 🔄 Changed: replaced "npm ci" with "pnpm install --frozen-lockfile"
+# Install ALL dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the source code
-COPY . .
+# Copy tsconfig and source code
+COPY tsconfig.json ./
+COPY src ./src
+COPY drizzle ./drizzle
+COPY drizzle.config.ts ./
 
-# Build the application
-# 🔄 Changed: replaced "npm run build" with "pnpm run build"
-RUN pnpm run build
+# Build TypeScript to JavaScript
+RUN pnpm build
 
-
-# ---- Production stage ----
+# ==========================================
+# Production Stage
+# ==========================================
 FROM node:20-alpine AS production
 
-# Create a non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S starwars -u 1001
+# Install pnpm in production stage
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && adduser -S starwars -u 1001
 
 WORKDIR /app
 
-# Enable Corepack again to use pnpm in this stage
-RUN corepack enable
-
-# Copy package files again for production dependencies
-# 🔄 Changed: include pnpm-lock.yaml for pnpm to use the correct lockfile
+# Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install only production dependencies
-# 🔄 Changed: replaced "npm ci --only=production" with pnpm equivalent
+# Install ONLY production dependencies
 RUN pnpm install --frozen-lockfile --prod
 
-# Copy built files and other required assets from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/drizzle ./drizzle
+# Copy built files from builder
+COPY --from=builder --chown=starwars:nodejs /app/dist ./dist
+COPY --from=builder --chown=starwars:nodejs /app/drizzle ./drizzle
+COPY --chown=starwars:nodejs drizzle.config.ts ./
 
-# Copy configuration file
-COPY drizzle.config.ts ./
-
-# Set correct file ownership
-RUN chown -R starwars:nodejs /app
-
-# Run as non-root user
+# Change to non-root user
 USER starwars
 
-# Expose the application port
+# Expose port
 EXPOSE 3333
 
-# Healthcheck to verify if the service is responding
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3333/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3333/films', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
 
-# Start the application
+# Start application
 CMD ["node", "dist/server.js"]
